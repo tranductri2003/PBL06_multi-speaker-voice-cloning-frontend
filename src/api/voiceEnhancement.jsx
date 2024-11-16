@@ -1,16 +1,19 @@
-import { API_BASE_URL } from "../configs/constants";
+export const API_ENDPOINT = "http://192.168.88.136:8000/api/speech_enhancement/denoise";
 
-export const enhanceVoice = async (audioFile) => {
-    const formData = new FormData();
-    formData.append("file", audioFile);
+export const models = [
+    { displayName: "Unet", value: "unet" },
+    { displayName: "Unet Plus Plus", value: "Unet_plusplus" },
+    { displayName: "Modified Unet", value: "modified_unet" },
+];
 
-    const response = await fetch(`${API_BASE_URL}/enhance-voice`, {
+export const fetchVoiceEnhancement = async (formData, modelName) => {
+    const response = await fetch(`${API_ENDPOINT}?model_name=${modelName}`, {
         method: "POST",
         body: formData,
     });
 
     if (!response.ok) {
-        throw new Error("Voice enhancement failed");
+        throw new Error("Failed to process audio.");
     }
 
     return response.json();
