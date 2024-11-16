@@ -1,46 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import useVoiceEnhancement from "../../../hooks/useVoiceEnhancement";
+import { models } from "../../../api/voiceEnhancement";
 import "./VoiceEnhancement.css";
 
 const VoiceEnhancement = () => {
-    const [rawAudio, setRawAudio] = useState(null);
-    const [modelName, setModelName] = useState("default_model");
-    const [result, setResult] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleFileChange = (e) => {
-        setRawAudio(e.target.files[0]);
-    };
-
-    const handleModelChange = (e) => {
-        setModelName(e.target.value);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!rawAudio) {
-            alert("Please upload an audio file.");
-            return;
-        }
-
-        const fakeData = {
-            spectrogram_voice_noise: "https://via.placeholder.com/300x150.png?text=Spectrogram+Voice+Noise",
-            audio_voice_noise: "https://via.placeholder.com/300x150.png?text=Audio+Voice+Noise",
-            spectrogram_true_voice: "https://via.placeholder.com/300x150.png?text=Spectrogram+True+Voice",
-            audio_true_voice: "https://via.placeholder.com/300x150.png?text=Audio+True+Voice",
-            denoised_audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // File audio giả lập
-        };
-
-        try {
-            setIsLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            setResult(fakeData);
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Failed to process audio.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const {
+        rawAudio,
+        result,
+        isLoading,
+        modelName,
+        handleFileChange,
+        handleModelChange,
+        handleSubmit,
+    } = useVoiceEnhancement();
 
     return (
         <div className="voice-enhancement">
@@ -58,10 +30,11 @@ const VoiceEnhancement = () => {
                 <div className="form-group">
                     <label htmlFor="model-select">Select Model:</label>
                     <select id="model-select" value={modelName} onChange={handleModelChange}>
-                        <option value="default_model">Default Model</option>
-                        <option value="model_1">Model 1</option>
-                        <option value="model_2">Model 2</option>
-                        <option value="model_3">Model 3</option>
+                        {models.map((model) => (
+                            <option key={model.value} value={model.value}>
+                                {model.displayName}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <button type="submit" disabled={isLoading}>
@@ -74,15 +47,38 @@ const VoiceEnhancement = () => {
                     <h2>Results</h2>
                     <div className="section">
                         <h3>Input Audio</h3>
-                        <audio controls src={URL.createObjectURL(rawAudio)} />
-                        <img src={result.spectrogram_voice_noise} alt="Spectrogram Voice + Noise" />
-                        <img src={result.audio_voice_noise} alt="Audio Voice + Noise" />
+                        <audio controls src={rawAudio ? URL.createObjectURL(rawAudio) : ""} />
+                        <img
+                            src={`data:image/jpeg;base64,${result.spectrogram_voice_noise}`}
+                            alt="Spectrogram Voice + Noise"
+                        />
+                        <img
+                            src={`data:image/png;base64,${result.wave_voice_noise}`}
+                            alt="Waveform Voice + Noise"
+                        />
                     </div>
                     <div className="section">
-                        <h3>Denoised Audio</h3>
-                        <audio controls src={result.denoised_audio} />
-                        <img src={result.spectrogram_true_voice} alt="Spectrogram True Voice" />
-                        <img src={result.audio_true_voice} alt="Audio True Voice" />
+                        <h3>Predicted Noise</h3>
+                        <img
+                            src={`data:image/jpeg;base64,${result.spectrogram_predicted_noise}`}
+                            alt="Spectrogram Predicted Noise"
+                        />
+                        <img
+                            src={`data:image/png;base64,${result.wave_predicted_noise}`}
+                            alt="Waveform Predicted Noise"
+                        />
+                    </div>
+                    <div className="section">
+                        <h3>Predicted Voice</h3>
+                        <audio controls src={`data:audio/wav;base64,${result.audio_base64}`} />
+                        <img
+                            src={`data:image/jpeg;base64,${result.spectrogram_predicted_voice}`}
+                            alt="Spectrogram Predicted Voice"
+                        />
+                        <img
+                            src={`data:image/png;base64,${result.wave_predicted_voice}`}
+                            alt="Waveform Predicted Voice"
+                        />
                     </div>
                 </div>
             )}
