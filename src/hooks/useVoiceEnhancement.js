@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { fetchVoiceEnhancement } from "../api/voiceEnhancement";
+import { VOICE_ENHANCEMENT_DEFAULT_MODEL } from "../configs/constant";
 
 const useVoiceEnhancement = () => {
     const [rawAudio, setRawAudio] = useState(null);
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [modelName, setModelName] = useState("modified_unet");
+    const [modelName, setModelName] = useState(VOICE_ENHANCEMENT_DEFAULT_MODEL);
 
     const handleFileChange = (e) => {
         setRawAudio(e.target.files[0]);
