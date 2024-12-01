@@ -1,16 +1,21 @@
-import { API_BASE_URL } from "../configs/constants";
+import { SPEAKER_VERIFICATION_API } from '../configs/endpoints';
 
-export const verifySpeaker = async (audioFile) => {
-    const formData = new FormData();
-    formData.append("file", audioFile);
+export const models = [
+    { displayName: "LSTM", value: "lstm" },
+    { displayName: "Transformer", value: "transformer" },
+];
 
-    const response = await fetch(`${API_BASE_URL}/verify-speaker`, {
+export const compareSpeakers = async (formData, modelType) => {
+    formData.append("model_type", modelType);
+
+    const response = await fetch(SPEAKER_VERIFICATION_API.SIMILARITY, {
         method: "POST",
         body: formData,
     });
 
     if (!response.ok) {
-        throw new Error("Speaker verification failed");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to compare speakers.");
     }
 
     return response.json();
