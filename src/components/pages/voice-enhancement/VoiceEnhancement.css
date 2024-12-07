@@ -117,3 +117,28 @@ img {
         transform: translateY(0);
     }
 }
+
+.processing-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #495057;
+    margin-right: 10px;
+}
+
+.info-value {
+    color: #007bff;
+    font-size: 1.1rem;
+}
