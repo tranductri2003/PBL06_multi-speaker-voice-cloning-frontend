@@ -1,6 +1,7 @@
 import React from "react";
 import useVoiceEnhancement from "../../../hooks/useVoiceEnhancement";
 import { models } from "../../../api/voiceEnhancement";
+import { MAX_FILE_SIZE } from "../../../configs/constant";
 import "./VoiceEnhancement.css";
 
 const VoiceEnhancement = () => {
@@ -19,13 +20,21 @@ const VoiceEnhancement = () => {
             <h1>Voice Enhancement</h1>
             <form onSubmit={handleSubmit} className="upload-form">
                 <div className="form-group">
-                    <label htmlFor="audio-upload">Upload Audio:</label>
+                    <label htmlFor="audio-upload">
+                        Upload Audio (WAV, MP3, OGG - Max {MAX_FILE_SIZE / (1024 * 1024)}MB):
+                    </label>
                     <input
                         type="file"
                         id="audio-upload"
-                        accept="audio/*"
+                        accept=".wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/mp3,audio/ogg"
                         onChange={handleFileChange}
+                        disabled={isLoading}
                     />
+                    <small className="file-info">
+                        Supported formats: WAV, MP3, OGG
+                        <br />
+                        Maximum file size: {MAX_FILE_SIZE / (1024 * 1024)}MB
+                    </small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="model-select">Select Model:</label>
