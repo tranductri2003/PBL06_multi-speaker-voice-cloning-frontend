@@ -45,6 +45,16 @@ const VoiceEnhancement = () => {
             {result && (
                 <div className="results">
                     <h2>Results</h2>
+                    <div className="processing-info">
+                        <div className="info-item">
+                            <span className="info-label">Processing Time:</span>
+                            <span className="info-value">{result.duration.toFixed(2)}s</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="info-label">Model Used:</span>
+                            <span className="info-value">{result.model_type}</span>
+                        </div>
+                    </div>
                     <div className="section">
                         <h3>Input Audio</h3>
                         <audio controls src={rawAudio ? URL.createObjectURL(rawAudio) : ""} />
