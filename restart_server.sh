@@ -41,9 +41,12 @@ pkill -f "serve -s build" || echo "ℹ️  No existing server running"
 echo "🔧 Ensuring serve is installed..."
 yarn global add serve
 
+# Add serve to PATH
+export PATH="$PATH:$(yarn global bin)"
+
 # Start server
 echo "🌟 Starting frontend server..."
-nohup serve -s build -l $PORT > "$LOG_FILE" 2>&1 &
+nohup yarn preview > "$LOG_FILE" 2>&1 &
 
 # Wait a bit to check if server started successfully
 sleep 5
