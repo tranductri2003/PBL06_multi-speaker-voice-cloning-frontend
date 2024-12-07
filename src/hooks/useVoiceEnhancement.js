@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fetchVoiceEnhancement } from "../api/voiceEnhancement";
 import { VOICE_ENHANCEMENT_DEFAULT_MODEL } from "../configs/constant";
+import { MAX_FILE_SIZE } from "../configs/constant";
 
 const useVoiceEnhancement = () => {
     const [rawAudio, setRawAudio] = useState(null);
@@ -9,7 +10,25 @@ const useVoiceEnhancement = () => {
     const [modelName, setModelName] = useState(VOICE_ENHANCEMENT_DEFAULT_MODEL);
 
     const handleFileChange = (e) => {
-        setRawAudio(e.target.files[0]);
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`File size must be less than ${MAX_FILE_SIZE / (1024 * 1024)}MB. Your file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                e.target.value = '';
+                return;
+            }
+
+            // Check file type
+            const allowedTypes = ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3', 'audio/ogg'];
+            if (!allowedTypes.includes(file.type)) {
+                alert(`Please select a valid audio file (WAV, MP3, or OGG). Your file: ${file.name} (${file.type})`);
+                e.target.value = '';
+                return;
+            }
+
+            setRawAudio(file);
+        }
     };
 
     const handleModelChange = (e) => {

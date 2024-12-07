@@ -2,6 +2,7 @@ import React from "react";
 import useSpeakerVerification from "../../../hooks/useSpeakerVerification";
 import { models } from "../../../api/speakerVerification";
 import "./SpeakerVerification.css";
+import { MAX_FILE_SIZE } from "../../../configs/constant";
 
 const SpeakerVerification = () => {
     const {
@@ -21,22 +22,38 @@ const SpeakerVerification = () => {
             <h1>Speaker Verification</h1>
             <form onSubmit={handleSubmit} className="upload-form">
                 <div className="form-group">
-                    <label htmlFor="first-audio">First Speaker Audio:</label>
+                    <label htmlFor="first-audio">
+                        First Speaker Audio (WAV, MP3, OGG - Max {MAX_FILE_SIZE / (1024 * 1024)}MB):
+                    </label>
                     <input
                         type="file"
                         id="first-audio"
-                        accept="audio/*"
+                        accept=".wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/mp3,audio/ogg"
                         onChange={handleFirstAudioChange}
+                        disabled={isLoading}
                     />
+                    <small className="file-info">
+                        Supported formats: WAV, MP3, OGG
+                        <br />
+                        Maximum file size: {MAX_FILE_SIZE / (1024 * 1024)}MB
+                    </small>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="second-audio">Second Speaker Audio:</label>
+                    <label htmlFor="second-audio">
+                        Second Speaker Audio (WAV, MP3, OGG - Max {MAX_FILE_SIZE / (1024 * 1024)}MB):
+                    </label>
                     <input
                         type="file"
                         id="second-audio"
-                        accept="audio/*"
+                        accept=".wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/mp3,audio/ogg"
                         onChange={handleSecondAudioChange}
+                        disabled={isLoading}
                     />
+                    <small className="file-info">
+                        Supported formats: WAV, MP3, OGG
+                        <br />
+                        Maximum file size: {MAX_FILE_SIZE / (1024 * 1024)}MB
+                    </small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="model-select">Select Model:</label>
