@@ -61,9 +61,35 @@ const SpeakerVerification = () => {
                 <div className="results">
                     <h2>Results</h2>
                     <div className="similarity-score">
-                        <h3>Similarity Score: {(result.similarity_score * 100).toFixed(2)}%</h3>
-                        <p>Processing Time: {result.duration.toFixed(2)}s</p>
-                        <p>Model Used: {result.model_type}</p>
+                        <h3>{(result.similarity_score * 100).toFixed(2)}% Similar</h3>
+                        <div className="progress-bar-container">
+                            <div className="scale-marks">
+                                <span>0</span>
+                                <span>20</span>
+                                <span>40</span>
+                                <span>60</span>
+                                <span>80</span>
+                                <span>100</span>
+                            </div>
+                            <div 
+                                className="progress-bar" 
+                                style={{ '--progress-width': `${(result.similarity_score * 100)}%` }}
+                            >
+                                <span className="progress-label">
+                                    {(result.similarity_score * 100).toFixed(2)}%
+                                </span>
+                            </div>
+                        </div>
+                        <div className="processing-info">
+                            <div className="info-item">
+                                <span className="info-label">Processing Time:</span>
+                                <span className="info-value">{result.duration.toFixed(2)}s</span>
+                            </div>
+                            <div className="info-item">
+                                <span className="info-label">Model Used:</span>
+                                <span className="info-value">{result.model_type}</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="audio-comparison">
                         <div className="audio-section">

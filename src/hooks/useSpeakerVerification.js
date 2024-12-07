@@ -6,7 +6,7 @@ const useSpeakerVerification = () => {
     const [secondAudio, setSecondAudio] = useState(null);
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [modelType, setModelType] = useState("transformer");
+    const [modelType, setModelType] = useState("lstm");
 
     const handleFirstAudioChange = (e) => {
         setFirstAudio(e.target.files[0]);
