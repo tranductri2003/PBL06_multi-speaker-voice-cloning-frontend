@@ -19,9 +19,9 @@ const Header = () => {
                 <NavLink to="/text-to-speech" activeClassName="active">
                     Text-to-Speech
                 </NavLink>
-                <NavLink to="/voice-enhancement" activeClassName="active">
+                {/* <NavLink to="/voice-enhancement" activeClassName="active">
                     Voice Enhancement
-                </NavLink>
+                </NavLink> */}
             </nav>
         </header>
     );
