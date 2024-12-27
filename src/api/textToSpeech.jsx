@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../configs/constants";
+import { API_BASE_URL } from "../configs/endpoints";
 
 export const generateSpeech = async (text, speakerProfile) => {
     const response = await fetch(`${API_BASE_URL}/text-to-speech`, {
