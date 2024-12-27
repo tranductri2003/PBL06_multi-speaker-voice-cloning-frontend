@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useTextToSpeech from "../../../hooks/useTextToSpeech";
 import "./TextToSpeech.css";
 
@@ -13,10 +13,16 @@ const TextToSpeech = () => {
         handleSubmit,
     } = useTextToSpeech();
 
+    const [language, setLanguage] = useState("en");
+
+    const handleLanguageChange = (e) => {
+        setLanguage(e.target.value);
+    };
+
     return (
         <div className="text-to-speech">
             <h1>Text to Speech</h1>
-            <form onSubmit={handleSubmit} className="upload-form">
+            <form onSubmit={(e) => handleSubmit(e, language)} className="upload-form">
                 <div className="form-group">
                     <label htmlFor="audio-upload">Upload Audio (WAV, MP3, OGG):</label>
                     <input
@@ -37,6 +43,13 @@ const TextToSpeech = () => {
                         rows="4"
                         disabled={isLoading}
                     />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="language-select">Select Language:</label>
+                    <select id="language-select" value={language} onChange={handleLanguageChange}>
+                        <option value="en">English</option>
+                        <option value="vi">Vietnamese</option>
+                    </select>
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? "Processing..." : "Submit"}
