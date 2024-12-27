@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generateSpeech } from "../api/textToSpeech"; // Giả sử bạn có API này
+import { generateSpeech } from "../api/textToSpeech";
 
 const useTextToSpeech = () => {
     const [audioFile, setAudioFile] = useState(null);
