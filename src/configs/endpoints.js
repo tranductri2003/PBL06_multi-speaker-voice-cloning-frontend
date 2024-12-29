@@ -6,3 +6,6 @@ export const VOICE_ENHANCEMENT_API = {
 export const SPEAKER_VERIFICATION_API = {
     SIMILARITY: `${API_BASE_URL}/api/v1/speaker-verification/similarity`,
 };
+export const TEXT_TO_SPEECH_API = {
+    GENERATE: `${API_BASE_URL}/api/v1/voice-cloning/tacotron`,
+};
