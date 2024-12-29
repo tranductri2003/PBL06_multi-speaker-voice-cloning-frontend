@@ -1,7 +1,7 @@
 import { SPEAKER_VERIFICATION_API } from '../configs/endpoints';
 
 export const models = [
-    { displayName: "LSTM", value: "lstm" },
+    // { displayName: "LSTM", value: "lstm" },
     { displayName: "Transformer", value: "transformer" },
 ];
 

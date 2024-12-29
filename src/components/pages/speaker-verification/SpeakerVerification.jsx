@@ -2,65 +2,161 @@ import React from "react";
 import useSpeakerVerification from "../../../hooks/useSpeakerVerification";
 import { models } from "../../../api/speakerVerification";
 import "./SpeakerVerification.css";
-import { MAX_FILE_SIZE } from "../../../configs/constant";
 
 const SpeakerVerification = () => {
     const {
         firstAudio,
         secondAudio,
+        firstRecordedAudio,
+        secondRecordedAudio,
         result,
         isLoading,
+        isRecordingFirst,
+        isRecordingSecond,
+        hasPermission,
         modelType,
         handleFirstAudioChange,
         handleSecondAudioChange,
         handleModelChange,
         handleSubmit,
+        startRecordingFirst,
+        stopRecordingFirst,
+        startRecordingSecond,
+        stopRecordingSecond,
+        requestMicrophonePermission
     } = useSpeakerVerification();
+
+    const handleFirstRecordMouseDown = async () => {
+        try {
+            if (hasPermission === null) {
+                await requestMicrophonePermission();
+            }
+            await startRecordingFirst();
+        } catch (error) {
+            alert("Please grant microphone permissions to record audio.");
+        }
+    };
+
+    const handleSecondRecordMouseDown = async () => {
+        try {
+            if (hasPermission === null) {
+                await requestMicrophonePermission();
+            }
+            await startRecordingSecond();
+        } catch (error) {
+            alert("Please grant microphone permissions to record audio.");
+        }
+    };
+
+    const similarityScore = result?.similarity_score;
 
     return (
         <div className="speaker-verification">
             <h1>Speaker Verification</h1>
             <form onSubmit={handleSubmit} className="upload-form">
-                <div className="form-group">
-                    <label htmlFor="first-audio">
-                        First Speaker Audio (WAV, MP3, OGG - Max {MAX_FILE_SIZE / (1024 * 1024)}MB):
-                    </label>
-                    <input
-                        type="file"
-                        id="first-audio"
-                        accept=".wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/mp3,audio/ogg"
-                        onChange={handleFirstAudioChange}
-                        disabled={isLoading}
-                    />
-                    <small className="file-info">
-                        Supported formats: WAV, MP3, OGG
-                        <br />
-                        Maximum file size: {MAX_FILE_SIZE / (1024 * 1024)}MB
-                    </small>
+                <div className="speaker-section">
+                    <h2>First Speaker</h2>
+                    <div className="input-methods">
+                        <div className="upload-section">
+                            <label className="file-input-label">
+                                Upload Audio (WAV, MP3, OGG - Max 5MB)
+                            </label>
+                            <div className="file-input-container">
+                                <label htmlFor="first-audio" className="choose-file-button">
+                                    Choose File
+                                </label>
+                                <span className="file-name">
+                                    {firstAudio ? firstAudio.name : 'No file chosen'}
+                                </span>
+                                <input
+                                    type="file"
+                                    id="first-audio"
+                                    accept=".wav,.mp3,.ogg"
+                                    onChange={handleFirstAudioChange}
+                                    disabled={isLoading || isRecordingFirst}
+                                />
+                            </div>
+                            <div className="file-info">
+                                Supported formats: WAV, MP3, OGG
+                                <br />
+                                Maximum file size: 5MB
+                            </div>
+                        </div>
+                        <div className="record-section">
+                            <button
+                                type="button"
+                                className={`record-button ${isRecordingFirst ? 'recording' : ''}`}
+                                onMouseDown={handleFirstRecordMouseDown}
+                                onMouseUp={stopRecordingFirst}
+                                onMouseLeave={stopRecordingFirst}
+                                disabled={isLoading}
+                            >
+                                {isRecordingFirst ? 'Recording...' : 'Hold to Record'}
+                            </button>
+                            {firstRecordedAudio && (
+                                <div className="recorded-audio">
+                                    <audio controls src={URL.createObjectURL(firstRecordedAudio)} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="second-audio">
-                        Second Speaker Audio (WAV, MP3, OGG - Max {MAX_FILE_SIZE / (1024 * 1024)}MB):
-                    </label>
-                    <input
-                        type="file"
-                        id="second-audio"
-                        accept=".wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/mp3,audio/ogg"
-                        onChange={handleSecondAudioChange}
-                        disabled={isLoading}
-                    />
-                    <small className="file-info">
-                        Supported formats: WAV, MP3, OGG
-                        <br />
-                        Maximum file size: {MAX_FILE_SIZE / (1024 * 1024)}MB
-                    </small>
+
+                <div className="speaker-section">
+                    <h2>Second Speaker</h2>
+                    <div className="input-methods">
+                        <div className="upload-section">
+                            <label className="file-input-label">
+                                Upload Audio (WAV, MP3, OGG - Max 5MB)
+                            </label>
+                            <div className="file-input-container">
+                                <label htmlFor="second-audio" className="choose-file-button">
+                                    Choose File
+                                </label>
+                                <span className="file-name">
+                                    {secondAudio ? secondAudio.name : 'No file chosen'}
+                                </span>
+                                <input
+                                    type="file"
+                                    id="second-audio"
+                                    accept=".wav,.mp3,.ogg"
+                                    onChange={handleSecondAudioChange}
+                                    disabled={isLoading || isRecordingSecond}
+                                />
+                            </div>
+                            <div className="file-info">
+                                Supported formats: WAV, MP3, OGG
+                                <br />
+                                Maximum file size: 5MB
+                            </div>
+                        </div>
+                        <div className="record-section">
+                            <button
+                                type="button"
+                                className={`record-button ${isRecordingSecond ? 'recording' : ''}`}
+                                onMouseDown={handleSecondRecordMouseDown}
+                                onMouseUp={stopRecordingSecond}
+                                onMouseLeave={stopRecordingSecond}
+                                disabled={isLoading}
+                            >
+                                {isRecordingSecond ? 'Recording...' : 'Hold to Record'}
+                            </button>
+                            {secondRecordedAudio && (
+                                <div className="recorded-audio">
+                                    <audio controls src={URL.createObjectURL(secondRecordedAudio)} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="model-select">Select Model:</label>
                     <select 
                         id="model-select" 
                         value={modelType} 
                         onChange={handleModelChange}
+                        disabled={isLoading}
                     >
                         {models.map((model) => (
                             <option key={model.value} value={model.value}>
@@ -69,8 +165,13 @@ const SpeakerVerification = () => {
                         ))}
                     </select>
                 </div>
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? "Processing..." : "Compare Speakers"}
+
+                <button 
+                    type="submit" 
+                    disabled={isLoading || (!firstAudio && !firstRecordedAudio) || (!secondAudio && !secondRecordedAudio)}
+                    className="submit-button"
+                >
+                    {isLoading ? 'Processing...' : 'Compare Speakers'}
                 </button>
             </form>
 
@@ -164,4 +265,4 @@ const SpeakerVerification = () => {
     );
 };
 
-export default SpeakerVerification; 
+export default SpeakerVerification;

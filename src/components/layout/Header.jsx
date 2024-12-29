@@ -13,14 +13,14 @@ const Header = () => {
                 </NavLink>
             </div>
             <nav className="nav">
+                <NavLink to="/voice-enhancement" activeClassName="active">
+                    Denoise
+                </NavLink>
                 <NavLink to="/speaker-verification" activeClassName="active">
                     Speaker Verification
                 </NavLink>
                 <NavLink to="/text-to-speech" activeClassName="active">
                     Text-to-Speech
-                </NavLink>
-                <NavLink to="/voice-enhancement" activeClassName="active">
-                    Voice Enhancement
                 </NavLink>
             </nav>
         </header>
