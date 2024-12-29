@@ -1,22 +1,42 @@
 import { useState } from "react";
 import { generateSpeech } from "../api/textToSpeech";
+import useAudioRecorder from "./useAudioRecorder";
 
 const useTextToSpeech = () => {
-    const [audioFile, setAudioFile] = useState(null);
+    const [rawAudio, setRawAudio] = useState(null);
     const [text, setText] = useState("");
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [language, setLanguage] = useState("en");
+
+    const {
+        isRecording,
+        recordedAudio,
+        hasPermission,
+        startRecording,
+        stopRecording,
+        setRecordedAudio,
+        requestMicrophonePermission
+    } = useAudioRecorder();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const allowedTypes = ["audio/wav", "audio/mp3", "audio/ogg"];
-            if (!allowedTypes.includes(file.type)) {
-                alert(`Please select a valid audio file (WAV, MP3, or OGG).`);
-                e.target.value = "";
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                alert("File size must be less than 5MB");
+                e.target.value = '';
                 return;
             }
-            setAudioFile(file);
+
+            const allowedTypes = ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3', 'audio/ogg'];
+            if (!allowedTypes.includes(file.type)) {
+                alert(`Please select a valid audio file (WAV, MP3, or OGG)`);
+                e.target.value = '';
+                return;
+            }
+
+            setRawAudio(file);
+            setRecordedAudio(null); // Reset recorded audio when file is uploaded
         }
     };
 
@@ -24,16 +44,23 @@ const useTextToSpeech = () => {
         setText(e.target.value);
     };
 
+    const handleLanguageChange = (e) => {
+        setLanguage(e.target.value);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!audioFile && !text) {
-            alert("Please upload an audio file or enter some text.");
+        const audioToProcess = rawAudio || recordedAudio;
+        
+        if (!audioToProcess && !text) {
+            alert("Please upload an audio file, record audio, or enter text.");
             return;
         }
 
         const formData = new FormData();
-        if (audioFile) formData.append("audio", audioFile);
+        if (audioToProcess) formData.append("audio", audioToProcess);
         if (text) formData.append("text", text);
+        formData.append("lang", language);
 
         try {
             setIsLoading(true);
@@ -41,20 +68,28 @@ const useTextToSpeech = () => {
             setResult(data);
         } catch (error) {
             console.error("Error:", error);
-            alert("Failed to process the request. Please try again.");
+            alert(error.message);
         } finally {
             setIsLoading(false);
         }
     };
 
     return {
-        audioFile,
+        rawAudio,
+        recordedAudio,
         text,
         result,
         isLoading,
+        isRecording,
+        hasPermission,
+        language,
         handleFileChange,
         handleTextChange,
+        handleLanguageChange,
         handleSubmit,
+        startRecording,
+        stopRecording,
+        requestMicrophonePermission
     };
 };
 

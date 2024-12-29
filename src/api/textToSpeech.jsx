@@ -1,19 +1,14 @@
-import { API_BASE_URL } from "../configs/endpoints";
+import { TEXT_TO_SPEECH_API } from "../configs/endpoints";
 
-export const generateSpeech = async (text, speakerProfile) => {
-    const response = await fetch(`${API_BASE_URL}/text-to-speech`, {
+export const generateSpeech = async (formData) => {
+    const response = await fetch(TEXT_TO_SPEECH_API.GENERATE, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            text,
-            speakerProfile,
-        }),
+        body: formData,
     });
 
     if (!response.ok) {
-        throw new Error("Text-to-speech generation failed");
+        const error = await response.json();
+        throw new Error(error.message || "Text-to-speech generation failed");
     }
 
     return response.json();

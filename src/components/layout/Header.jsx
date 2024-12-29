@@ -8,7 +8,7 @@ const Header = () => {
         <header className="header">
             <div className="logo">
                 <img src={logo} alt="Logo" />
-                <NavLink to="/" style={{ textDecoration: "none" }}>
+                <NavLink to="/text-to-speech" style={{ textDecoration: "none" }}>
                     <h1>Voice Cloning</h1>
                 </NavLink>
             </div>
