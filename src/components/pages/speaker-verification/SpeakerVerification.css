@@ -322,3 +322,26 @@
 .progress-bar-container:hover .progress-bar {
     filter: brightness(1.1);
 }
+
+.checkbox-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #495057;
+}
+
+.checkbox-section input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #2b6cb0;
+    cursor: pointer;
+}
+
+.checkbox-section label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
