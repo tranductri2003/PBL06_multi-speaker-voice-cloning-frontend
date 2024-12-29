@@ -31,7 +31,7 @@
 .logo h1 {
     font-size: 2rem;
     font-weight: bold;
-    color: #007bff;
+    color: #2b6cb0;
     margin: 0;
 }
 
@@ -56,12 +56,12 @@
 
 .nav a:hover {
     background-color: #e9ecef;
-    color: #007bff;
+    color: #2b6cb0;
 }
 
 .nav a.active {
-    border-bottom: 2px solid #007bff;
-    color: #007bff;
+    border-bottom: 2px solid #2b6cb0;
+    color: #2b6cb0;
 }
 
 main {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useSpeakerVerification from "../../../hooks/useSpeakerVerification";
 import { models } from "../../../api/speakerVerification";
 import "./SpeakerVerification.css";
@@ -25,6 +25,17 @@ const SpeakerVerification = () => {
         stopRecordingSecond,
         requestMicrophonePermission
     } = useSpeakerVerification();
+
+    const [denoise, setDenoise] = useState(false);
+
+    const handleDenoiseChange = (e) => {
+        setDenoise(e.target.checked);
+    };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        handleSubmit(e, denoise);
+    };
 
     const handleFirstRecordMouseDown = async () => {
         try {
@@ -53,7 +64,7 @@ const SpeakerVerification = () => {
     return (
         <div className="speaker-verification">
             <h1>Speaker Verification</h1>
-            <form onSubmit={handleSubmit} className="upload-form">
+            <form onSubmit={handleFormSubmit} className="upload-form">
                 <div className="speaker-section">
                     <h2>First Speaker</h2>
                     <div className="input-methods">
@@ -164,6 +175,17 @@ const SpeakerVerification = () => {
                             </option>
                         ))}
                     </select>
+                </div>
+
+                <div className="checkbox-section">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={denoise}
+                            onChange={handleDenoiseChange}
+                        />
+                        Denoise Audio
+                    </label>
                 </div>
 
                 <button 

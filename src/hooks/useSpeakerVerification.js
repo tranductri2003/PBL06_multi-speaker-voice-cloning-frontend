@@ -62,7 +62,7 @@ const useSpeakerVerification = () => {
         setModelType(e.target.value);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, denoise) => {
         e.preventDefault();
         const audioToProcessFirst = firstRecordedAudio || firstAudio;
         const audioToProcessSecond = secondRecordedAudio || secondAudio;
@@ -75,6 +75,7 @@ const useSpeakerVerification = () => {
         const formData = new FormData();
         formData.append("first_audio", audioToProcessFirst);
         formData.append("second_audio", audioToProcessSecond);
+        formData.append("denoise", denoise);
 
         try {
             setIsLoading(true);
