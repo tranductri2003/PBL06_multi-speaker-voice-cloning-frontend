@@ -1,13 +1,30 @@
 import { useState } from "react";
 import { compareSpeakers } from "../api/speakerVerification";
 import { MAX_FILE_SIZE } from "../configs/constant";
+import useAudioRecorder from "./useAudioRecorder";
 
 const useSpeakerVerification = () => {
     const [firstAudio, setFirstAudio] = useState(null);
     const [secondAudio, setSecondAudio] = useState(null);
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [modelType, setModelType] = useState("lstm");
+    const [modelType, setModelType] = useState("transformer");
+
+    const {
+        isRecording: isRecordingFirst,
+        recordedAudio: firstRecordedAudio,
+        hasPermission,
+        startRecording: startRecordingFirst,
+        stopRecording: stopRecordingFirst,
+        requestMicrophonePermission
+    } = useAudioRecorder();
+
+    const {
+        isRecording: isRecordingSecond,
+        recordedAudio: secondRecordedAudio,
+        startRecording: startRecordingSecond,
+        stopRecording: stopRecordingSecond
+    } = useAudioRecorder();
 
     const validateAudioFile = (file, inputName) => {
         if (file.size > MAX_FILE_SIZE) {
@@ -47,14 +64,17 @@ const useSpeakerVerification = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!firstAudio || !secondAudio) {
-            alert("Please upload both audio files.");
+        const audioToProcessFirst = firstRecordedAudio || firstAudio;
+        const audioToProcessSecond = secondRecordedAudio || secondAudio;
+
+        if (!audioToProcessFirst || !audioToProcessSecond) {
+            alert("Please provide both audio inputs.");
             return;
         }
 
         const formData = new FormData();
-        formData.append("first_audio", firstAudio);
-        formData.append("second_audio", secondAudio);
+        formData.append("first_audio", audioToProcessFirst);
+        formData.append("second_audio", audioToProcessSecond);
 
         try {
             setIsLoading(true);
@@ -71,13 +91,23 @@ const useSpeakerVerification = () => {
     return {
         firstAudio,
         secondAudio,
+        firstRecordedAudio,
+        secondRecordedAudio,
         result,
         isLoading,
+        isRecordingFirst,
+        isRecordingSecond,
+        hasPermission,
         modelType,
         handleFirstAudioChange,
         handleSecondAudioChange,
         handleModelChange,
         handleSubmit,
+        startRecordingFirst,
+        stopRecordingFirst,
+        startRecordingSecond,
+        stopRecordingSecond,
+        requestMicrophonePermission
     };
 };
 
